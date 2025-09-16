@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Kisan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f9f4, #c8e6c9);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #2e7d32;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 24px;
+      color: white !important;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #1b5e20;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #444;
+    }
+
+    /* Feature cards */
+    .feature-card {
+      border: none;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%; /* equal height */
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0px 6px 20px rgba(0,0,0,0.15);
+    }
+    .feature-card h5 {
+      font-weight: 600;
+      margin-bottom: 12px;
+      white-space: nowrap; /* keep text in one line */
+    }
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #2e7d32;
+      color: white;
+      margin-top: auto; /* push footer to bottom */
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">🌾 Smart Kisan</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to Smart Kisan</h1>
+    <p>Your multilingual AI-powered farming assistant</p>
+  </section>
+
+  <!-- Features Grid -->
+  <div class="container mb-5">
+    <div class="row g-4">
+
+      <div class="col-md-4 d-flex">
+        <a href="/askAnything" class="text-decoration-none text-dark w-100">
+          <div class="card feature-card text-center">
+            <div class="feature-icon">🎙️</div>
+            <h5>Ask Anything</h5>
+            <p>Ask questions in any language with voice support</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4 d-flex">
+        <a href="/soil" class="text-decoration-none text-dark w-100">
+          <div class="card feature-card text-center">
+            <div class="feature-icon">🧪</div>
+            <h5>Fertilizer Guide</h5>
+            <p>Soil health analysis & guidance</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4 d-flex">
+        <a href="/crop" class="text-decoration-none text-dark w-100">
+          <div class="card feature-card text-center">
+            <div class="feature-icon">🌱</div>
+            <h5>Crop Guide</h5>
+            <p>Best crops for your soil & season</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4 d-flex">
+        <a href="/weather" class="text-decoration-none text-dark w-100">
+          <div class="card feature-card text-center">
+            <div class="feature-icon">☁️</div>
+            <h5>Weather Info</h5>
+            <p>Real-time weather alerts & predictions</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4 d-flex">
+        <a href="/pest" class="text-decoration-none text-dark w-100">
+          <div class="card feature-card text-center">
+            <div class="feature-icon">🐛</div>
+            <h5>Pest Detection</h5>
+            <p>Upload images for disease detection</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4 d-flex">
+        <a href="/market" class="text-decoration-none text-dark w-100">
+          <div class="card feature-card text-center">
+            <div class="feature-icon">💰</div>
+            <h5>Market Prices</h5>
+            <p>Track daily mandi crop prices</p>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    🚜 Made with ❤️ for Farmers
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
