@@ -1,94 +1,207 @@
+<!-- templates/askAnything.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Ask Anything - Smart Kisan</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: #f0f9f4;
-      font-family: 'Poppins', sans-serif;
-    }
-    .container {
-      margin-top: 50px;
-      max-width: 700px;
-    }
-    .card {
-      border-radius: 16px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-      padding: 20px;
-    }
-    #micBtn {
-      font-size: 1.5rem;
-      border: none;
-      background: none;
-      cursor: pointer;
-      margin-left: 8px;
-    }
-    .answer-box {
-      margin-top: 20px;
-      padding: 15px;
-      background: #e8f5e9;
-      border-radius: 12px;
-    }
-  </style>
+ <meta charset="UTF-8">
+ <title>Ask Anything | Smart Kisan</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <!-- Bootstrap CDN -->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+ <style>
+  body {
+    background: linear-gradient(135deg, #f0f9f4, #c8e6c9);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Navbar */
+  .navbar {
+    background: #2e7d32;
+  }
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 24px;
+    color: white !important;
+  }
+
+  /* Card styling */
+  .ask-card {
+    border: none;
+    border-radius: 16px;
+    padding: 30px;
+    margin-top: 40px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    background: white;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  /* Listening pulse */
+  #listening {
+    display: none;
+    margin-left: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #dc3545;
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 15px;
+    background: #2e7d32;
+    color: white;
+    margin-top: auto;
+    font-weight: 500;
+  }
+ </style>
 </head>
 <body>
-  <div class="container">
-    <h2 class="text-center mb-4">🎙️ Ask Anything</h2>
-    <div class="card">
-      <div class="input-group">
-        <input type="text" id="questionInput" class="form-control" placeholder="Type your question...">
-        <button id="micBtn">🎤</button>
-      </div>
-      <button class="btn btn-success mt-3 w-100" onclick="askAI()">Ask</button>
-    </div>
 
-    <div id="answerBox" class="answer-box d-none">
-      <h5>Answer:</h5>
-      <p id="answerText"></p>
-      <audio id="answerAudio" controls class="mt-2"></audio>
-    </div>
-  </div>
+ <!-- Navbar -->
+ <nav class="navbar navbar-expand-lg">
+   <div class="container">
+     <a class="navbar-brand" href="/">🌾 Smart Kisan</a>
+   </div>
+ </nav>
 
-  <script>
-    let recognition;
-    if ('webkitSpeechRecognition' in window) {
-      recognition = new webkitSpeechRecognition();
-      recognition.lang = "hi-IN"; // you can set "auto" logic later
-      recognition.continuous = false;
-      recognition.interimResults = false;
+ <!-- Main Section -->
+ <div class="container">
+   <div class="ask-card">
+     <h2 class="mb-3 text-center">🤖 Ask Anything</h2>
+     <p class="text-center text-muted mb-4">Type or speak your question in any language</p>
 
-      recognition.onresult = function(event) {
-        document.getElementById("questionInput").value = event.results[0][0].transcript;
-      };
-    }
+     <!-- Textarea -->
+     <textarea id="question" class="form-control mb-3" rows="4" placeholder="Type your question here…"></textarea>
 
-    document.getElementById("micBtn").addEventListener("click", () => {
-      if (recognition) recognition.start();
-      else alert("Speech recognition not supported in this browser.");
-    });
+     <!-- Buttons -->
+     <div class="d-flex align-items-center">
+       <button id="sendBtn" class="btn btn-primary">Send</button>
+       <button id="voiceBtn" class="btn btn-success ms-2">🎤 Speak</button>
+       <span id="listening">🎧 Listening...</span>
+     </div>
 
-    async function askAI() {
-      const question = document.getElementById("questionInput").value;
-      if (!question) return alert("Please enter a question.");
+     <!-- Answer Box -->
+     <div id="answer" class="mt-4 p-3 rounded bg-light border" style="display: none;"></div>
+   </div>
+ </div>
 
-      const res = await fetch("/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question })
-      });
-      const data = await res.json();
+ <!-- Footer -->
+ <footer>
+   🚜 Made with ❤️ for Farmers
+ </footer>
 
-      document.getElementById("answerText").innerText = data.answer;
-      document.getElementById("answerBox").classList.remove("d-none");
+ <!-- Bootstrap JS -->
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-      // Play voice response
-      const audio = document.getElementById("answerAudio");
-      audio.src = "data:audio/mp3;base64," + data.audio;
-      audio.play();
-    }
-  </script>
+ <!-- Script -->
+ <script>
+ async function postJSON(url, data) {
+   const resp = await fetch(url, {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify(data)
+   });
+   if (!resp.ok) {
+     const err = await resp.json();
+     throw new Error(err.error || "Server error");
+   }
+   return resp.json();
+ }
+
+ document.getElementById("sendBtn").addEventListener("click", async () => {
+   const q = document.getElementById("question").value.trim();
+   if (!q) return alert("Please type a question first.");
+   await askAndShow(q);
+ });
+
+ const voiceBtn = document.getElementById("voiceBtn");
+ let recognizing = false;
+ let recognition;
+
+ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+   recognition = new SpeechRecognition();
+   recognition.lang = "auto";
+   recognition.interimResults = false;
+   recognition.maxAlternatives = 1;
+
+   recognition.onresult = async (event) => {
+     const transcript = event.results[0][0].transcript;
+     document.getElementById("question").value = transcript;
+     await askAndShow(transcript);
+   };
+
+   recognition.onerror = (e) => console.error("Speech error:", e);
+   recognition.onstart = () => {
+     document.getElementById("listening").style.display = "inline";
+     voiceBtn.classList.remove("btn-success");
+     voiceBtn.classList.add("btn-danger");
+     voiceBtn.textContent = "🛑 Stop";
+   };
+   recognition.onend = () => {
+     document.getElementById("listening").style.display = "none";
+     voiceBtn.classList.remove("btn-danger");
+     voiceBtn.classList.add("btn-success");
+     voiceBtn.textContent = "🎤 Speak";
+     recognizing = false;
+   };
+ } else {
+   voiceBtn.disabled = true;
+   voiceBtn.title = "SpeechRecognition not supported in this browser.";
+ }
+
+ voiceBtn.addEventListener("click", () => {
+   if (!recognition) return;
+   if (!recognizing) {
+     recognition.start();
+     recognizing = true;
+   } else {
+     recognition.stop();
+   }
+ });
+
+ async function askAndShow(question) {
+   try {
+     const data = await postJSON("/askAnything", { question });
+     const answer = data.answer;
+     const answerDiv = document.getElementById("answer");
+     answerDiv.style.display = "block";
+     answerDiv.textContent = answer;
+
+     // ---- Speak the answer ----
+     if ("speechSynthesis" in window) {
+       speechSynthesis.cancel(); // stop any previous speech
+       const utter = new SpeechSynthesisUtterance(answer);
+       speechSynthesis.speak(utter);
+     }
+   } catch (err) {
+     console.error(err);
+   }
+ }
+
+ // 🔴 Stop speech + mic if page refreshes / navigates away
+ window.addEventListener("beforeunload", () => {
+   if ("speechSynthesis" in window) {
+     speechSynthesis.cancel();
+   }
+   if (recognition && recognizing) {
+     recognition.stop();
+   }
+ });
+ </script>
+
 </body>
 </html>
