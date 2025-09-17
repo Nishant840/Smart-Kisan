@@ -29,6 +29,9 @@ def process_question():
 
     return render_template("askAnything.html", question=question, response=final_response)
 
+@app.route('/weather')
+def weatherInfo():
+    return render_template('weatherInfo.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
