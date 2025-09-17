@@ -89,6 +89,9 @@ def ask_anything():
 
     return jsonify({"answer": answer})
 
+@app.route('/weather')
+def weatherInfo():
+    return render_template('weatherInfo.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Weather Info - Smart Kisan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #f0f9f4;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            max-width: 700px;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-3">
+        <h2 class="text-center">Weather Info</h2>
+
+        <div class="card mt-4" id="search_box">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="pincode" class="form-label">Enter Pincode:</label>
+                    <input type="text" id="pincode" placeholder="e.g. 462001" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="country" class="form-label d-block">Select Country:</label>
+                    <select id="country" class="form-select">
+                        <option selected value="IN">India (IN)</option>
+                        <option value="US">United States (US)</option>
+                        <option value="GB">United Kingdom (GB)</option>
+                        <option value="CA">Canada (CA)</option>
+                        <option value="AU">Australia (AU)</option>
+                        <option value="DE">Germany (DE)</option>
+                        <option value="FR">France (FR)</option>
+                        <option value="JP">Japan (JP)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-success mt-3 w-100" onclick="weatherInfo()">Search</button>
+        </div>
+
+        <div class="w-100 mx-auto card d-none" id="weather_box">
+            <table class="table table-striped mx-auto">
+                <tbody>
+                    <tr>
+                        <th>Latitude</th>
+                        <td id="lat">-</td>
+                    </tr>
+                    <tr>
+                        <th>Longitude</th>
+                        <td id="lon">-</td>
+                    </tr>
+                    <tr>
+                        <th>Place</th>
+                        <td id="place">-</td>
+                    </tr>
+                    <tr>
+                        <th>Weather</th>
+                        <td id="weather_main">-</td>
+                    </tr>
+                    <tr>
+                        <th>Weather Description</th>
+                        <td id="weather_desc">-</td>
+                    </tr>
+                    <tr>
+                        <th>Temperature (°C)</th>
+                        <td id="temp">-</td>
+                    </tr>
+                    <tr>
+                        <th>Humidity (%)</th>
+                        <td id="humidity">-</td>
+                    </tr>
+                    <tr>
+                        <th>Pressure (hPa)</th>
+                        <td id="pressure">-</td>
+                    </tr>
+                    <tr>
+                        <th>Wind (km/hr)</th>
+                        <td id="wind">-</td>
+                    </tr>
+                    <tr>
+                        <th>Sea Level (hPa)</th>
+                        <td id="sea_level">-</td>
+                    </tr>
+                    <tr>
+                        <th>Ground Level (hPa)</th>
+                        <td id="grnd_level">-</td>
+                    </tr>
+                    <tr>
+                        <th>Visibility (metres)</th>
+                        <td id="visibility">-</td>
+                    </tr>
+                    <tr>
+                        <th>Sunrise</th>
+                        <td id="sunrise">-</td>
+                    </tr>
+                    <tr>
+                        <th>Sunset</th>
+                        <td id="sunset">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button class="btn btn-success w-100 mt-3" onclick="resetSearch()">New Search</button>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(n, decimals = 2) {
+            if (n === undefined || n === null) return "N/A";
+            return Number(n).toFixed(decimals);
+        }
+
+        function epochToLocalTime(epochSeconds, timezoneOffsetSeconds) {
+            if (!epochSeconds) return "N/A";
+
+            const shifted = new Date((epochSeconds + (timezoneOffsetSeconds || 0)) * 1000);
+
+            const hh = shifted.getUTCHours();
+            const mm = shifted.getUTCMinutes();
+            const pad = (n) => String(n).padStart(2, "0");
+
+            const ampm = hh >= 12 ? "PM" : "AM";
+            const h12 = hh % 12 === 0 ? 12 : hh % 12;
+            return `${h12}:${pad(mm)} ${ampm}`;
+        }
+
+
+        async function weatherInfo() {
+            const pincode = document.getElementById("pincode").value.trim();
+            if (!pincode) return alert("Please enter a pincode.");
+
+            const country = document.getElementById("country").value;
+            if (!country) return alert("Please select a country.");
+
+            const API_KEY = "f12185e7dae983b43c7078259568afa7";
+            const url = `https://api.openweathermap.org/data/2.5/weather?zip=${encodeURIComponent(pincode + ',' + country)}&units=metric&appid=${API_KEY}`;
+
+            const weather_box = document.getElementById("weather_box");
+            const search_box = document.getElementById("search_box");
+
+            try {
+                search_box.classList.add("d-none");
+                weather_box.classList.remove("d-none");
+
+                document.getElementById("place").innerText = "Loading...";
+                const res = await fetch(url);
+                if (!res.ok) {
+                    const errText = await res.text();
+                    alert(`API error: ${res.status} ${res.statusText}\n\n${errText}`);
+                    resetSearch();
+                    return;
+                }
+                const data = await res.json();
+
+                document.getElementById("lat").innerText = data.coord?.lat ?? "N/A";
+                document.getElementById("lon").innerText = data.coord?.lon ?? "N/A";
+                document.getElementById("place").innerText = `${data.name ?? "N/A"} ${data.sys?.country ? '(' + data.sys.country + ')' : ''}`;
+
+                const weather0 = (data.weather && data.weather[0]) || {};
+                document.getElementById("weather_main").innerText = weather0.main ?? "N/A";
+                document.getElementById("weather_desc").innerText = weather0.description ?? "N/A";
+
+                document.getElementById("temp").innerText = data.main?.temp !== undefined ? formatNumber(data.main.temp, 2) : "N/A";
+                document.getElementById("humidity").innerText = data.main?.humidity ?? "N/A";
+                document.getElementById("pressure").innerText = data.main?.pressure ?? "N/A";
+
+                if (data.wind?.speed !== undefined) {
+                    const kmh = data.wind.speed * 3.6;
+                    document.getElementById("wind").innerText = formatNumber(kmh, 2);
+                } else {
+                    document.getElementById("wind").innerText = "N/A";
+                }
+
+                document.getElementById("sea_level").innerText = data.main?.sea_level ?? "N/A";
+                document.getElementById("grnd_level").innerText = data.main?.grnd_level ?? "N/A";
+                document.getElementById("visibility").innerText = data.visibility ?? "N/A";
+
+                const tz = data.timezone ?? 0;
+                document.getElementById("sunrise").innerText = epochToLocalTime(data.sys?.sunrise, tz);
+                document.getElementById("sunset").innerText = epochToLocalTime(data.sys?.sunset, tz);
+
+            } catch (err) {
+                alert("Error fetching weather !!");
+                resetSearch();
+            }
+        }
+
+        function resetSearch() {
+            document.getElementById("weather_box").classList.add("d-none");
+            document.getElementById("search_box").classList.remove("d-none");
+            document.getElementById("pincode").value = "";
+        }
+    </script>
+</body>
+
+</html>
