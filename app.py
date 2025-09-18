@@ -55,6 +55,11 @@ def crop_Recommend():
 def soil_page():
     return render_template("soil.html")
 
+@app.route('/pest')
+def pest_page():
+    return render_template("pest.html")
+
+
 @app.route("/predictFertilizer", methods=["POST"])
 def predict_fertilizer():
     data = request.get_json()
