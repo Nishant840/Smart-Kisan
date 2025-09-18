@@ -7,37 +7,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
+        * {
+            /* overflow: auto; */
+        }
+
         body {
-            background: #f0f9f4;
+            background: linear-gradient(135deg, #f0f9f4, #c8e6c9);
             font-family: "Poppins", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            margin-top: 50px;
-            max-width: 700px;
+        /* Navbar */
+        .navbar {
+            background: #2e7d32;
         }
 
-        .card {
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 24px;
+            color: white !important;
+        }
+
+        #weather_box .card {
             border-radius: 16px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            min-height: 236px;
+        }
+
+        #weather_hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: 600;
+            color: #1b5e20;
+        }
+
+        /* Feature cards */
+        .feature-card {
+            border: none;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        #weather_hero p {
+            font-size: 1.2rem;
+            color: #444;
+        }
+
+        #weather_box_button {
+            position: fixed;
+            z-index: 10;
+            bottom: 40vh;
+            left: 1vw;
+            border: 3px solid #1b5e20;
+        }
+
+        #weather_box_button:hover {
+            background-color: white;
+            scale: 1.02;
+            transition: all ease-out 0.2s;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #2e7d32;
+            color: white;
+            margin-top: auto;
+            /* push footer to bottom */
+            font-weight: 500;
         }
     </style>
 </head>
 
 <body>
-    <div class="container mt-3">
-        <h2 class="text-center">Weather Info</h2>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container px-1">
+            <a class="navbar-brand" href="#">🌾 Smart Kisan</a>
+        </div>
+    </nav>
 
-        <div class="card mt-4" id="search_box">
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="pincode" class="form-label">Enter Pincode:</label>
-                    <input type="text" id="pincode" placeholder="e.g. 462001" class="form-control" />
+    <section class="container mt-2" id="weather_hero">
+        <div class="container mt-5">
+            <h1 class="text-center">Weather Info</h1>
+            <p class="text-center">Accurate Weather Predictions at Your Fingertips
+                <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;" viewBox="0 0 640 640">
+                        <path fill="#1b5e20"
+                            d="M332.9 32.2C327.4 31.5 321.9 33.6 318.4 37.9C314.9 42.2 313.8 48 315.6 53.2C318.4 61.4 319.9 70.1 319.9 79.3C319.9 101 311.4 116.5 298 126.9C284.1 137.7 263.9 143.9 239.9 143.9L215.9 143.9C167.3 143.9 127.9 183.3 127.9 231.9C127.9 246.7 131.6 260.7 138.1 273C96.1 279.6 63.9 316 63.9 359.9C63.9 406.5 100.1 444.6 145.8 447.7C148.9 435.3 155.7 423.9 165.4 415.2L306.7 289C318.9 278.1 334.7 272 351.1 272C395.7 272 427.6 315 414.8 357.7L402.1 400.1C430.9 401.3 454.8 421.2 461.9 448L488.1 448C536.7 448 576.1 408.6 576.1 360C576.1 316.1 544 279.7 501.9 273.1C508.4 260.8 512.1 246.9 512.1 232C512.1 183.4 472.7 144 424.1 144L414.7 144C415.6 138.6 416.1 133.1 416.1 127.4C416.1 78.7 380 38.5 333 32.2zM208.6 480L270.4 480L239.2 584.1C235.6 596 244.5 608 257 608C261.6 608 266 606.3 269.4 603.3L410.5 476.9C414 473.8 416 469.3 416 464.5C416 455.3 408.6 447.9 399.4 447.9L337.6 447.9L368.8 343.8C372.4 331.9 363.5 319.9 351 319.9C346.4 319.9 342 321.6 338.6 324.6L197.5 451.1C194 454.2 192 458.7 192 463.5C192 472.7 199.4 480.1 208.6 480.1z" />
+                    </svg></i>
+            </p>
+    </section>
+
+    <div class="container mt-4" id="search_box">
+        <div class="container">
+            <div class="w-sm-75 mx-auto">
+                <div class="col-md-6 my-2 mx-auto">
+                    <label for="pincode" class="mx-1 form-label">Pincode:</label>
+                    <input type="text" id="pincode" placeholder="e.g. 462001"
+                        class="form-control shadow-none border-0" />
                 </div>
-                <div class="col-md-6">
-                    <label for="country" class="form-label d-block">Select Country:</label>
-                    <select id="country" class="form-select">
+                <div class="col-md-6 my-3 mx-auto">
+                    <label for="country" class="mx-1 form-label d-block">Country:</label>
+                    <select id="country" class="form-select shadow-none border-0">
                         <option selected value="IN">India (IN)</option>
                         <option value="US">United States (US)</option>
                         <option value="GB">United Kingdom (GB)</option>
@@ -48,75 +139,226 @@
                         <option value="JP">Japan (JP)</option>
                     </select>
                 </div>
+                <button class="d-block mx-auto btn btn-success mt-5 col-md-6 col-12" onclick="weatherInfo()">
+                    Search
+                </button>
             </div>
-            <button class="btn btn-success mt-3 w-100" onclick="weatherInfo()">Search</button>
         </div>
 
-        <div class="w-100 mx-auto card d-none" id="weather_box">
-            <table class="table table-striped mx-auto">
-                <tbody>
-                    <tr>
-                        <th>Latitude</th>
-                        <td id="lat">-</td>
-                    </tr>
-                    <tr>
-                        <th>Longitude</th>
-                        <td id="lon">-</td>
-                    </tr>
-                    <tr>
-                        <th>Place</th>
-                        <td id="place">-</td>
-                    </tr>
-                    <tr>
-                        <th>Weather</th>
-                        <td id="weather_main">-</td>
-                    </tr>
-                    <tr>
-                        <th>Weather Description</th>
-                        <td id="weather_desc">-</td>
-                    </tr>
-                    <tr>
-                        <th>Temperature (°C)</th>
-                        <td id="temp">-</td>
-                    </tr>
-                    <tr>
-                        <th>Humidity (%)</th>
-                        <td id="humidity">-</td>
-                    </tr>
-                    <tr>
-                        <th>Pressure (hPa)</th>
-                        <td id="pressure">-</td>
-                    </tr>
-                    <tr>
-                        <th>Wind (km/hr)</th>
-                        <td id="wind">-</td>
-                    </tr>
-                    <tr>
-                        <th>Sea Level (hPa)</th>
-                        <td id="sea_level">-</td>
-                    </tr>
-                    <tr>
-                        <th>Ground Level (hPa)</th>
-                        <td id="grnd_level">-</td>
-                    </tr>
-                    <tr>
-                        <th>Visibility (metres)</th>
-                        <td id="visibility">-</td>
-                    </tr>
-                    <tr>
-                        <th>Sunrise</th>
-                        <td id="sunrise">-</td>
-                    </tr>
-                    <tr>
-                        <th>Sunset</th>
-                        <td id="sunset">-</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <button class="btn btn-success w-100 mt-3" onclick="resetSearch()">New Search</button>
-        </div>
     </div>
+
+    <div class="w-100 px-lg-5 px-4 mx-auto my-5 d-none" id="weather_box">
+
+        <button class="btn rounded-circle btn-light" id="weather_box_button" onclick="resetSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 20px; height: 30px;">
+                <path fill="#1b5e20"
+                    d="M41.4 297.4C28.9 309.9 28.9 330.2 41.4 342.7L169.4 470.7C181.9 483.2 202.2 483.2 214.7 470.7C227.2 458.2 227.2 437.9 214.7 425.4L141.3 352L576 352C593.7 352 608 337.7 608 320C608 302.3 593.7 288 576 288L141.3 288L214.7 214.6C227.2 202.1 227.2 181.8 214.7 169.3C202.2 156.8 181.9 156.8 169.4 169.3L41.4 297.3z" />
+            </svg>
+        </button>
+        <!-- row 1 -->
+        <div class="row px-5 g-sm-4 g-0">
+            <div class="col-lg-4 col-sm-6 col-12 mb-md-1 mb-4">
+                <div class="text-dark w-100">
+                    <div class="card feature-card text-center">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;"
+                                viewBox="0 0 640 640">
+                                <path fill="#1b5e20"
+                                    d="M415.9 344L225 344C227.9 408.5 242.2 467.9 262.5 511.4C273.9 535.9 286.2 553.2 297.6 563.8C308.8 574.3 316.5 576 320.5 576C324.5 576 332.2 574.3 343.4 563.8C354.8 553.2 367.1 535.8 378.5 511.4C398.8 467.9 413.1 408.5 416 344zM224.9 296L415.8 296C413 231.5 398.7 172.1 378.4 128.6C367 104.2 354.7 86.8 343.3 76.2C332.1 65.7 324.4 64 320.4 64C316.4 64 308.7 65.7 297.5 76.2C286.1 86.8 273.8 104.2 262.4 128.6C242.1 172.1 227.8 231.5 224.9 296zM176.9 296C180.4 210.4 202.5 130.9 234.8 78.7C142.7 111.3 74.9 195.2 65.5 296L176.9 296zM65.5 344C74.9 444.8 142.7 528.7 234.8 561.3C202.5 509.1 180.4 429.6 176.9 344L65.5 344zM463.9 344C460.4 429.6 438.3 509.1 406 561.3C498.1 528.6 565.9 444.8 575.3 344L463.9 344zM575.3 296C565.9 195.2 498.1 111.3 406 78.7C438.3 130.9 460.4 210.4 463.9 296L575.3 296z" />
+                            </svg>
+                        </div>
+                        <h4 class="mt-2">Coordinates</h4>
+
+                        <table class="mx-lg-auto text-start my-3">
+                            <tbody>
+                                <tr>
+                                    <td>Latitude</td>
+                                    <td class="text-end w-50" id="lat">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Longitude</td>
+                                    <td class="text-end w-50" id="lon">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Place</td>
+                                    <td class="text-end w-50" id="place">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- second  -->
+            <div class="col-lg-4 col-sm-6 col-12 mb-md-1 mb-4">
+                <div class="text-dark w-100">
+                    <div class="card feature-card text-center">
+                        <div class="feature-icon">
+                            <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;"
+                                    viewBox="0 0 640 640">
+                                    <path fill="#1b5e20"
+                                        d="M332.9 32.2C327.4 31.5 321.9 33.6 318.4 37.9C314.9 42.2 313.8 48 315.6 53.2C318.4 61.4 319.9 70.1 319.9 79.3C319.9 101 311.4 116.5 298 126.9C284.1 137.7 263.9 143.9 239.9 143.9L215.9 143.9C167.3 143.9 127.9 183.3 127.9 231.9C127.9 246.7 131.6 260.7 138.1 273C96.1 279.6 63.9 316 63.9 359.9C63.9 406.5 100.1 444.6 145.8 447.7C148.9 435.3 155.7 423.9 165.4 415.2L306.7 289C318.9 278.1 334.7 272 351.1 272C395.7 272 427.6 315 414.8 357.7L402.1 400.1C430.9 401.3 454.8 421.2 461.9 448L488.1 448C536.7 448 576.1 408.6 576.1 360C576.1 316.1 544 279.7 501.9 273.1C508.4 260.8 512.1 246.9 512.1 232C512.1 183.4 472.7 144 424.1 144L414.7 144C415.6 138.6 416.1 133.1 416.1 127.4C416.1 78.7 380 38.5 333 32.2zM208.6 480L270.4 480L239.2 584.1C235.6 596 244.5 608 257 608C261.6 608 266 606.3 269.4 603.3L410.5 476.9C414 473.8 416 469.3 416 464.5C416 455.3 408.6 447.9 399.4 447.9L337.6 447.9L368.8 343.8C372.4 331.9 363.5 319.9 351 319.9C346.4 319.9 342 321.6 338.6 324.6L197.5 451.1C194 454.2 192 458.7 192 463.5C192 472.7 199.4 480.1 208.6 480.1z" />
+                                </svg></i>
+                        </div>
+                        <h4 class="mt-2">Weather</h4>
+
+                        <div class="mt-2">
+                            <p id="weather_main">-</p>
+                            <p class="m-0">Weather Description:
+                            <p id="weather_desc">-</p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- third -->
+            <div class="col-lg-4 col-sm-6 col-12 mb-md-1 mb-4">
+                <div class="text-dark w-100">
+                    <div class="card feature-card text-center">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;"
+                                viewBox="0 0 640 640">
+                                <path fill="#1b5e20"
+                                    d="M160 160C160 107 203 64 256 64C309 64 352 107 352 160L352 324.7C381.5 351.1 400 389.4 400 432C400 511.5 335.5 576 256 576C176.5 576 112 511.5 112 432C112 389.4 130.5 351 160 324.7L160 160zM256 496C291.3 496 320 467.3 320 432C320 405.1 303.5 382.1 280 372.7L280 160C280 146.7 269.3 136 256 136C242.7 136 232 146.7 232 160L232 372.7C208.5 382.2 192 405.2 192 432C192 467.3 220.7 496 256 496zM528 144C528 126.3 513.7 112 496 112C478.3 112 464 126.3 464 144C464 161.7 478.3 176 496 176C513.7 176 528 161.7 528 144zM416 144C416 99.8 451.8 64 496 64C540.2 64 576 99.8 576 144C576 188.2 540.2 224 496 224C451.8 224 416 188.2 416 144z" />
+                            </svg>
+                        </div>
+                        <h4 class="mt-2">Temperature & More</h4>
+
+                        <table class="mx-lg-auto text-start my-3">
+                            <tbody>
+                                <tr>
+                                    <td>Temperature (°C) </td>
+                                    <td class="text-end w-50" id="temp">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Humidity (%) </td>
+                                    <td class="text-end w-50" id="humidity">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Pressure (hPa) </td>
+                                    <td class="text-end w-50" id="pressure">-</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fourth  -->
+            <div class="col-lg-4 col-sm-6 col-12 mb-md-1 mb-4">
+                <div class="text-dark w-100">
+                    <div class="card feature-card text-center">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;"
+                                viewBox="0 0 640 640">
+                                <path fill="#1b5e20"
+                                    d="M352 96C352 113.7 366.3 128 384 128L424 128C437.3 128 448 138.7 448 152C448 165.3 437.3 176 424 176L96 176C78.3 176 64 190.3 64 208C64 225.7 78.3 240 96 240L424 240C472.6 240 512 200.6 512 152C512 103.4 472.6 64 424 64L384 64C366.3 64 352 78.3 352 96zM416 448C416 465.7 430.3 480 448 480L480 480C533 480 576 437 576 384C576 331 533 288 480 288L96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L480 352C497.7 352 512 366.3 512 384C512 401.7 497.7 416 480 416L448 416C430.3 416 416 430.3 416 448zM192 576L232 576C280.6 576 320 536.6 320 488C320 439.4 280.6 400 232 400L96 400C78.3 400 64 414.3 64 432C64 449.7 78.3 464 96 464L232 464C245.3 464 256 474.7 256 488C256 501.3 245.3 512 232 512L192 512C174.3 512 160 526.3 160 544C160 561.7 174.3 576 192 576z" />
+                            </svg>
+                        </div>
+                        <h4 class="mt-2">Wind & Rain</h4>
+
+
+                        <table class="mx-lg-auto text-start my-3">
+                            <tbody>
+                                <tr>
+                                    <td>Wind (km/hr)</td>
+                                    <td class="text-end w-50" id="wind">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Rain in last 1 hr (mm)</td>
+                                    <td class="text-end w-50" id="rain1h">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Rain in last 3 hr (mm)</td>
+                                    <td class="text-end w-50" id="rain3h">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fifth  -->
+            <div class="col-lg-4 col-sm-6 col-12 mb-md-1 mb-4">
+                <div class="text-dark w-100">
+                    <div class="card feature-card text-center">
+                        <div class="feature-icon">
+
+                            <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;"
+                                    fill="#1b5e20" viewBox="0 0 640 640">
+                                    <path
+                                        d="M210.2 53.9C217.6 50.8 226 51.7 232.7 56.1L320.5 114.3L408.3 56.1C415 51.7 423.4 50.9 430.8 53.9C438.2 56.9 443.4 63.5 445 71.3L465.9 174.5L569.1 195.4C576.9 197 583.5 202.4 586.5 209.7C589.5 217 588.7 225.5 584.3 232.2L526.1 320L584.3 407.8C588.7 414.5 589.5 422.9 586.5 430.3C583.5 437.7 576.9 443.1 569.1 444.6L465.8 465.4L445 568.7C443.4 576.5 438 583.1 430.7 586.1C423.4 589.1 414.9 588.3 408.2 583.9L320.4 525.7L232.6 583.9C225.9 588.3 217.5 589.1 210.1 586.1C202.7 583.1 197.3 576.5 195.8 568.7L175 465.4L71.7 444.5C63.9 442.9 57.3 437.5 54.3 430.2C51.3 422.9 52.1 414.4 56.5 407.7L114.7 320L56.5 232.2C52.1 225.5 51.3 217.1 54.3 209.7C57.3 202.3 63.9 196.9 71.7 195.4L175 174.6L195.9 71.3C197.5 63.5 202.9 56.9 210.2 53.9zM239.6 320C239.6 275.6 275.6 239.6 320 239.6C364.4 239.6 400.4 275.6 400.4 320C400.4 364.4 364.4 400.4 320 400.4C275.6 400.4 239.6 364.4 239.6 320zM448.4 320C448.4 249.1 390.9 191.6 320 191.6C249.1 191.6 191.6 249.1 191.6 320C191.6 390.9 249.1 448.4 320 448.4C390.9 448.4 448.4 390.9 448.4 320z" />
+                                </svg>
+                            </i>
+                        </div>
+                        <h4 class="mt-2">Sun & Visibility</h4>
+
+                        <table class="mx-lg-auto text-start my-3">
+                            <tbody>
+                                <tr>
+                                    <td>Sunrise </td>
+                                    <td class="text-end w-50" id="sunrise">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Sunset</td>
+                                    <td class="text-end w-50" id="sunset">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Visibility (metres)</td>
+                                    <td class="text-end w-50" id="visibility">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- sixth -->
+            <div class="col-lg-4 col-sm-6 col-12 mb-md-1 mb-4">
+                <div class="text-dark w-100">
+                    <div class="card feature-card text-center">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                style="width: 40px; height: 30px;"
+                                viewBox="0 0 640 640">
+                                <path
+                                    fill="#1b5e20"
+                                    d="M342.6 41.4C330.1 28.9 309.8 28.9 297.3 41.4L201.3 137.4C188.8 149.9 188.8 170.2 201.3 182.7C213.8 195.2 234.1 195.2 246.6 182.7L288 141.3L288 498.7L246.6 457.4C234.1 444.9 213.8 444.9 201.3 457.4C188.8 469.9 188.8 490.2 201.3 502.7L297.3 598.7C303.3 604.7 311.4 608.1 319.9 608.1C328.4 608.1 336.5 604.7 342.5 598.7L438.5 502.7C451 490.2 451 469.9 438.5 457.4C426 444.9 405.7 444.9 393.2 457.4L351.8 498.8L351.8 141.3L393.2 182.7C405.7 195.2 426 195.2 438.5 182.7C451 170.2 451 149.9 438.5 137.4L342.5 41.4z" />
+                            </svg>
+                        </div>
+                        <h4 class="mt-2">Level</h4>
+
+                        <table class="mx-lg-auto text-start my-3">
+                            <tbody>
+                                <tr>
+                                    <td>Sea Level (hPa)</td>
+                                    <td class="text-end w-50" id="sea_level">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Ground Level (hPa)</td>
+                                    <td class="text-end w-50" id="grnd_level">-</td>
+                                </tr>
+                                <p></p>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        🚜 Made with ❤️ for Farmers
+    </footer>
 
     <script>
         function formatNumber(n, decimals = 2) {
@@ -127,7 +369,9 @@
         function epochToLocalTime(epochSeconds, timezoneOffsetSeconds) {
             if (!epochSeconds) return "N/A";
 
-            const shifted = new Date((epochSeconds + (timezoneOffsetSeconds || 0)) * 1000);
+            const shifted = new Date(
+                (epochSeconds + (timezoneOffsetSeconds || 0)) * 1000
+            );
 
             const hh = shifted.getUTCHours();
             const mm = shifted.getUTCMinutes();
@@ -138,7 +382,6 @@
             return `${h12}:${pad(mm)} ${ampm}`;
         }
 
-
         async function weatherInfo() {
             const pincode = document.getElementById("pincode").value.trim();
             if (!pincode) return alert("Please enter a pincode.");
@@ -147,7 +390,9 @@
             if (!country) return alert("Please select a country.");
 
             const API_KEY = "f12185e7dae983b43c7078259568afa7";
-            const url = `https://api.openweathermap.org/data/2.5/weather?zip=${encodeURIComponent(pincode + ',' + country)}&units=metric&appid=${API_KEY}`;
+            const url = `https://api.openweathermap.org/data/2.5/weather?zip=${encodeURIComponent(
+                pincode + "," + country
+            )}&units=metric&appid=${API_KEY}`;
 
             const weather_box = document.getElementById("weather_box");
             const search_box = document.getElementById("search_box");
@@ -168,15 +413,23 @@
 
                 document.getElementById("lat").innerText = data.coord?.lat ?? "N/A";
                 document.getElementById("lon").innerText = data.coord?.lon ?? "N/A";
-                document.getElementById("place").innerText = `${data.name ?? "N/A"} ${data.sys?.country ? '(' + data.sys.country + ')' : ''}`;
+                document.getElementById("place").innerText = `${data.name ?? "N/A"} ${data.sys?.country ? "(" + data.sys.country + ")" : ""
+                    }`;
 
                 const weather0 = (data.weather && data.weather[0]) || {};
-                document.getElementById("weather_main").innerText = weather0.main ?? "N/A";
-                document.getElementById("weather_desc").innerText = weather0.description ?? "N/A";
+                document.getElementById("weather_main").innerText =
+                    weather0.main ?? "N/A";
+                document.getElementById("weather_desc").innerText =
+                    weather0.description ?? "N/A";
 
-                document.getElementById("temp").innerText = data.main?.temp !== undefined ? formatNumber(data.main.temp, 2) : "N/A";
-                document.getElementById("humidity").innerText = data.main?.humidity ?? "N/A";
-                document.getElementById("pressure").innerText = data.main?.pressure ?? "N/A";
+                document.getElementById("temp").innerText =
+                    data.main?.temp !== undefined
+                        ? formatNumber(data.main.temp, 2)
+                        : "N/A";
+                document.getElementById("humidity").innerText =
+                    data.main?.humidity ?? "N/A";
+                document.getElementById("pressure").innerText =
+                    data.main?.pressure ?? "N/A";
 
                 if (data.wind?.speed !== undefined) {
                     const kmh = data.wind.speed * 3.6;
@@ -185,14 +438,28 @@
                     document.getElementById("wind").innerText = "N/A";
                 }
 
-                document.getElementById("sea_level").innerText = data.main?.sea_level ?? "N/A";
-                document.getElementById("grnd_level").innerText = data.main?.grnd_level ?? "N/A";
-                document.getElementById("visibility").innerText = data.visibility ?? "N/A";
+                document.getElementById("sea_level").innerText =
+                    data.main?.sea_level ?? "N/A";
+                document.getElementById("grnd_level").innerText =
+                    data.main?.grnd_level ?? "N/A";
+                document.getElementById("visibility").innerText =
+                    data.visibility ?? "N/A";
+
+                const rain1h = data.rain?.["1h"] ?? 0;  // mm in last 1 hour
+                const rain3h = data.rain?.["3h"] ?? 0;  // mm in last 3 hours
+
+                document.getElementById("rain1h").innerText = `${rain1h} mm`;
+                document.getElementById("rain3h").innerText = `${rain3h} mm`;
 
                 const tz = data.timezone ?? 0;
-                document.getElementById("sunrise").innerText = epochToLocalTime(data.sys?.sunrise, tz);
-                document.getElementById("sunset").innerText = epochToLocalTime(data.sys?.sunset, tz);
-
+                document.getElementById("sunrise").innerText = epochToLocalTime(
+                    data.sys?.sunrise,
+                    tz
+                );
+                document.getElementById("sunset").innerText = epochToLocalTime(
+                    data.sys?.sunset,
+                    tz
+                );
             } catch (err) {
                 alert("Error fetching weather !!");
                 resetSearch();
