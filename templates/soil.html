@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fertilizer Recommendation - Smart Kisan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f9f4, #c8e6c9);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar {
+      background: #2e7d32;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 24px;
+      color: white !important;
+    }
+    .form-section {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 25px;
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-section h2 {
+      font-weight: 700;
+      color: #1b5e20;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #2e7d32;
+      color: white;
+      margin-top: auto;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="/">🌾 Smart Kisan</a>
+    </div>
+  </nav>
+
+  <!-- Fertilizer Form -->
+  <div class="container">
+    <div class="form-section">
+      <h2>Fertilizer Recommendation</h2>
+      <form id="fertilizerForm">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Temperature (°C)</label>
+            <input type="number" step="0.1" min="0" max="50" class="form-control" name="Temperature" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Humidity (%)</label>
+            <input type="number" step="0.1" min="0" max="100" class="form-control" name="Humidity" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Moisture (%)</label>
+            <input type="number" step="0.1" min="0" max="100" class="form-control" name="Moisture" required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Nitrogen (N)</label>
+            <input type="number" step="1" min="0" max="200" class="form-control" name="Nitrogen" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Phosphorous (P)</label>
+            <input type="number" step="1" min="0" max="150" class="form-control" name="Phosphorous" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Potassium (K)</label>
+            <input type="number" step="1" min="0" max="200" class="form-control" name="Potassium" required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Soil Type</label>
+            <select class="form-select" name="Soil_Type" required>
+              <option value="Clayey">Clayey</option>
+              <option value="Loamy">Loamy</option>
+              <option value="Red">Red</option>
+              <option value="Black">Black</option>
+              <option value="Sandy">Sandy</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Crop Type</label>
+            <select class="form-select" name="Crop_Type" required>
+              <option value="rice">rice</option>
+              <option value="Wheat">Wheat</option>
+              <option value="Tobacco">Tobacco</option>
+              <option value="Sugarcane">Sugarcane</option>
+              <option value="Pulses">Pulses</option>
+              <option value="pomegranate">pomegranate</option>
+              <option value="Paddy">Paddy</option>
+              <option value="Oil seeds">Oil seeds</option>
+              <option value="Millets">Millets</option>
+              <option value="Maize">Maize</option>
+              <option value="Ground Nuts">Ground Nuts</option>
+              <option value="Cotton">Cotton</option>
+              <option value="coffee">coffee</option>
+              <option value="watermelon">watermelon</option>
+              <option value="Barley">Barley</option>
+              <option value="kidneybeans">kidneybeans</option>
+              <option value="orange">orange</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <button type="submit" class="btn btn-success px-4">Get Recommendation</button>
+        </div>
+      </form>
+
+      <div id="result" class="alert alert-info mt-4 d-none text-center"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    🚜 Made with ❤️ for Farmers
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById("fertilizerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const res = await fetch("/predictFertilizer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const resultDiv = document.getElementById("result");
+      const response = await res.json();
+
+      if (response.fertilizer) {
+        resultDiv.textContent = "Recommended Fertilizer: " + response.fertilizer;
+        resultDiv.classList.remove("d-none", "alert-danger");
+        resultDiv.classList.add("alert-info");
+      } else {
+        resultDiv.textContent = response.error || "Something went wrong!";
+        resultDiv.classList.remove("d-none", "alert-info");
+        resultDiv.classList.add("alert-danger");
+      }
+    });
+  </script>
+</body>
+</html>

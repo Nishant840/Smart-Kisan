@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import pickle
 import numpy as np
+import pandas as pd
+
 
 
 load_dotenv()
@@ -27,6 +29,13 @@ with open("scaler_crop.pkl", "rb") as f:
 with open("label_encoder_crop.pkl", "rb") as f:
     crop_le = pickle.load(f)
 
+with open("Fertilizer_Recommendation_model.pkl", "rb") as f:
+    fert_model = pickle.load(f)
+with open("Fertilizer_label_encoder.pkl", "rb") as f:
+    fert_le = pickle.load(f)
+
+
+
 def crop_recommendation(N, P, K, temp, hum, ph, rain):
     features = np.array([[N, P, K, temp, hum, ph, rain]])
     features_scaled = crop_scaler.transform(features)
@@ -41,6 +50,43 @@ def home():
 @app.route('/crop')
 def crop_Recommend():
     return render_template('crop.html')
+
+@app.route('/soil')
+def soil_page():
+    return render_template("soil.html")
+
+@app.route("/predictFertilizer", methods=["POST"])
+def predict_fertilizer():
+    data = request.get_json()
+
+    try:
+        custom_input = {
+            "Temperature": [float(data["Temperature"])],
+            "Humidity": [float(data["Humidity"])],
+            "Moisture": [float(data["Moisture"])],
+            "Nitrogen": [float(data["Nitrogen"])],
+            "Phosphorous": [float(data["Phosphorous"])],
+            "Potassium": [float(data["Potassium"])],
+            "Soil_Type": [data["Soil_Type"]],
+            "Crop_Type": [data["Crop_Type"]],
+        }
+
+        custom_df = pd.DataFrame(custom_input)
+
+        custom_encoded = pd.get_dummies(custom_df, columns=["Soil_Type", "Crop_Type"], drop_first=True)
+
+        for col in fert_model.feature_names_in_:
+            if col not in custom_encoded.columns:
+                custom_encoded[col] = 0
+        custom_encoded = custom_encoded[fert_model.feature_names_in_]
+
+        pred = fert_model.predict(custom_encoded)
+        fert_name = fert_le.inverse_transform(pred)[0]
+
+        return jsonify({"fertilizer": fert_name})
+
+    except Exception as e:
+        return jsonify({"error": f"Prediction failed: {str(e)}"}), 400
 
 
 @app.route("/predictCrop", methods=["POST"])
