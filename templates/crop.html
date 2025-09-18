@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Kisan - Crop Recommendation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f9f4, #c8e6c9);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #2e7d32;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 24px;
+      color: white !important;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      padding: 50px 20px 30px;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1b5e20;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    /* Form Card */
+    .form-card {
+      border: none;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto 50px;
+    }
+    .form-card h3 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1b5e20;
+      font-weight: 700;
+    }
+
+    .form-control:focus {
+      border-color: #2e7d32;
+      box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+    }
+
+    .btn-recommend {
+      background-color: #2e7d32;
+      color: white;
+      font-weight: 600;
+      width: 100%;
+    }
+    .btn-recommend:hover {
+      background-color: #1b5e20;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #2e7d32;
+      color: white;
+      margin-top: auto;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">🌾 Smart Kisan</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Crop Recommendation</h1>
+    <p>Enter the details below to get the best crop suggestions</p>
+  </section>
+
+  <!-- Crop Form -->
+  <div class="container">
+    <div class="card form-card">
+      <h3>Enter Soil & Environmental Details</h3>
+      <form id="cropForm">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="nitrogen" class="form-label">Nitrogen (N)</label>
+            <input type="number" class="form-control" id="nitrogen" placeholder="e.g., 50" required>
+          </div>
+          <div class="col-md-4">
+            <label for="phosphorus" class="form-label">Phosphorus (P)</label>
+            <input type="number" class="form-control" id="phosphorus" placeholder="e.g., 30" required>
+          </div>
+          <div class="col-md-4">
+            <label for="potassium" class="form-label">Potassium (K)</label>
+            <input type="number" class="form-control" id="potassium" placeholder="e.g., 40" required>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="temperature" class="form-label">Temperature (°C)</label>
+            <input type="number" class="form-control" id="temperature" placeholder="e.g., 25" required>
+          </div>
+          <div class="col-md-4">
+            <label for="humidity" class="form-label">Humidity (%)</label>
+            <input type="number" class="form-control" id="humidity" placeholder="e.g., 80" required>
+          </div>
+          <div class="col-md-4">
+            <label for="ph" class="form-label">Soil pH</label>
+            <input type="number" step="0.1" class="form-control" id="ph" placeholder="e.g., 6.5" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="rainfall" class="form-label">Rainfall (mm)</label>
+          <input type="number" class="form-control" id="rainfall" placeholder="e.g., 200" required>
+        </div>
+
+        <button type="submit" class="btn btn-recommend">Recommend Crop</button>
+      </form>
+
+      <!-- Recommendation Result -->
+      <div id="result" class="mt-4 text-center" style="font-weight: 600; color: #1b5e20;"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    🚜 Made with ❤️ for Farmers
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Placeholder JS for future backend -->
+  <script>
+    document.getElementById('cropForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Placeholder for backend recommendation
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerText = "Recommended crop will appear here after backend is implemented.";
+    });
+  </script>
+</body>
+</html>

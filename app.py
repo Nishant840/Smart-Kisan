@@ -21,6 +21,10 @@ GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 def home():
     return render_template("home.html")
 
+@app.route('/crop')
+def crop_Recommend():
+    return render_template('crop.html')
+
 
 @app.route("/askAnything", methods=["GET", "POST"])
 def ask_anything():
