@@ -2,6 +2,9 @@ import os
 import requests
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
+import pickle
+import numpy as np
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -17,6 +20,20 @@ if not GROQ_API_KEY:
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 
 
+with open("crop_model.pkl", "rb") as f:
+    crop_model = pickle.load(f)
+with open("scaler_crop.pkl", "rb") as f:
+    crop_scaler = pickle.load(f)
+with open("label_encoder_crop.pkl", "rb") as f:
+    crop_le = pickle.load(f)
+
+def crop_recommendation(N, P, K, temp, hum, ph, rain):
+    features = np.array([[N, P, K, temp, hum, ph, rain]])
+    features_scaled = crop_scaler.transform(features)
+    pred_encoded = crop_model.predict(features_scaled)[0]
+    return crop_le.inverse_transform([pred_encoded])[0]
+
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -24,6 +41,25 @@ def home():
 @app.route('/crop')
 def crop_Recommend():
     return render_template('crop.html')
+
+
+@app.route("/predictCrop", methods=["POST"])
+def predict_crop():
+    data = request.get_json()
+    try:
+        N = float(data["N"])
+        P = float(data["P"])
+        K = float(data["K"])
+        temp = float(data["temp"])
+        hum = float(data["hum"])
+        ph = float(data["ph"])
+        rain = float(data["rain"])
+    except (KeyError, ValueError):
+        return jsonify({"error": "Invalid input data"}), 400
+
+    crop_name = crop_recommendation(N, P, K, temp, hum, ph, rain)
+    return jsonify({"crop": crop_name})
+
 
 
 @app.route("/askAnything", methods=["GET", "POST"])

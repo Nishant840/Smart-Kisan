@@ -16,71 +16,25 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* Navbar */
-    .navbar {
-      background: #2e7d32;
-    }
-    .navbar-brand {
-      font-weight: 700;
-      font-size: 24px;
-      color: white !important;
-    }
-
-    /* Hero section */
-    .hero {
-      text-align: center;
-      padding: 50px 20px 30px;
-    }
-    .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1b5e20;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: #444;
-    }
-
-    /* Form Card */
+    .navbar { background: #2e7d32; }
+    .navbar-brand { font-weight: 700; font-size: 24px; color: white !important; }
+    .hero { text-align: center; padding: 50px 20px 30px; }
+    .hero h1 { font-size: 2.5rem; font-weight: 700; color: #1b5e20; }
+    .hero p { font-size: 1.1rem; color: #444; }
     .form-card {
-      border: none;
-      border-radius: 16px;
-      padding: 30px;
+      border: none; border-radius: 16px; padding: 30px;
       box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: 0 auto 50px;
+      max-width: 600px; margin: 0 auto 50px;
     }
-    .form-card h3 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #1b5e20;
-      font-weight: 700;
-    }
-
+    .form-card h3 { text-align: center; margin-bottom: 25px; color: #1b5e20; font-weight: 700; }
     .form-control:focus {
-      border-color: #2e7d32;
-      box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+      border-color: #2e7d32; box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
     }
-
-    .btn-recommend {
-      background-color: #2e7d32;
-      color: white;
-      font-weight: 600;
-      width: 100%;
-    }
-    .btn-recommend:hover {
-      background-color: #1b5e20;
-    }
-
-    /* Footer */
+    .btn-recommend { background-color: #2e7d32; color: white; font-weight: 600; width: 100%; }
+    .btn-recommend:hover { background-color: #1b5e20; }
     footer {
-      text-align: center;
-      padding: 15px;
-      background: #2e7d32;
-      color: white;
-      margin-top: auto;
-      font-weight: 500;
+      text-align: center; padding: 15px; background: #2e7d32;
+      color: white; margin-top: auto; font-weight: 500;
     }
   </style>
 </head>
@@ -107,36 +61,36 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="nitrogen" class="form-label">Nitrogen (N)</label>
-            <input type="number" class="form-control" id="nitrogen" placeholder="e.g., 50" required>
+            <input type="number" class="form-control" id="nitrogen" min="0" max="140" placeholder="e.g., 50" required>
           </div>
           <div class="col-md-4">
             <label for="phosphorus" class="form-label">Phosphorus (P)</label>
-            <input type="number" class="form-control" id="phosphorus" placeholder="e.g., 30" required>
+            <input type="number" class="form-control" id="phosphorus" min="0" max="140" placeholder="e.g., 30" required>
           </div>
           <div class="col-md-4">
             <label for="potassium" class="form-label">Potassium (K)</label>
-            <input type="number" class="form-control" id="potassium" placeholder="e.g., 40" required>
+            <input type="number" class="form-control" id="potassium" min="0" max="200" placeholder="e.g., 40" required>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="temperature" class="form-label">Temperature (°C)</label>
-            <input type="number" class="form-control" id="temperature" placeholder="e.g., 25" required>
+            <input type="number" class="form-control" id="temperature" min="0" max="50" placeholder="e.g., 25" required>
           </div>
           <div class="col-md-4">
             <label for="humidity" class="form-label">Humidity (%)</label>
-            <input type="number" class="form-control" id="humidity" placeholder="e.g., 80" required>
+            <input type="number" class="form-control" id="humidity" min="0" max="100" placeholder="e.g., 80" required>
           </div>
           <div class="col-md-4">
             <label for="ph" class="form-label">Soil pH</label>
-            <input type="number" step="0.1" class="form-control" id="ph" placeholder="e.g., 6.5" required>
+            <input type="number" step="0.1" class="form-control" id="ph" min="1" max="14" placeholder="e.g., 6.5" required>
           </div>
         </div>
 
         <div class="mb-3">
           <label for="rainfall" class="form-label">Rainfall (mm)</label>
-          <input type="number" class="form-control" id="rainfall" placeholder="e.g., 200" required>
+          <input type="number" class="form-control" id="rainfall" min="0" max="500" placeholder="e.g., 200" required>
         </div>
 
         <button type="submit" class="btn btn-recommend">Recommend Crop</button>
@@ -155,13 +109,38 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Placeholder JS for future backend -->
+  <!-- JS to call backend -->
   <script>
-    document.getElementById('cropForm').addEventListener('submit', function(e) {
+    document.getElementById('cropForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      // Placeholder for backend recommendation
+      const data = {
+        N: parseFloat(document.getElementById('nitrogen').value),
+        P: parseFloat(document.getElementById('phosphorus').value),
+        K: parseFloat(document.getElementById('potassium').value),
+        temp: parseFloat(document.getElementById('temperature').value),
+        hum: parseFloat(document.getElementById('humidity').value),
+        ph: parseFloat(document.getElementById('ph').value),
+        rain: parseFloat(document.getElementById('rainfall').value),
+      };
+
       const resultDiv = document.getElementById('result');
-      resultDiv.innerText = "Recommended crop will appear here after backend is implemented.";
+      resultDiv.innerText = "⏳ Getting recommendation...";
+
+      try {
+        const res = await fetch("/predictCrop", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (json.error) {
+          resultDiv.innerText = "❌ " + json.error;
+        } else {
+          resultDiv.innerText = "✅ Recommended Crop: " + json.crop;
+        }
+      } catch (err) {
+        resultDiv.innerText = "⚠️ Error contacting server.";
+      }
     });
   </script>
 </body>
