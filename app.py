@@ -35,6 +35,8 @@ with open("Fertilizer_label_encoder.pkl", "rb") as f:
     fert_le = pickle.load(f)
 
 
+daily_prices = pd.read_csv("daily_price.csv")
+
 
 def crop_recommendation(N, P, K, temp, hum, ph, rain):
     features = np.array([[N, P, K, temp, hum, ph, rain]])
@@ -59,6 +61,55 @@ def soil_page():
 def pest_page():
     return render_template("pest.html")
 
+@app.route("/market")
+def market_page():
+    return render_template("market.html")
+
+@app.route("/get_states")
+def get_states():
+    states = sorted(daily_prices["State"].dropna().unique().tolist())
+    return jsonify({"states": states})
+
+@app.route("/get_districts")
+def get_districts():
+    state = request.args.get("state")
+    if not state:
+        return jsonify({"districts": []})
+    districts = sorted(
+        daily_prices[daily_prices["State"] == state]["District"].dropna().unique().tolist()
+    )
+    return jsonify({"districts": districts})
+
+@app.route("/get_prices", methods=["POST"])
+def get_prices():
+    data = request.get_json()
+    state = data.get("state")
+    district = data.get("district")
+
+    if not state or not district:
+        return jsonify({"error": "State and District are required"}), 400
+
+    filtered = daily_prices[
+        (daily_prices["State"] == state) & (daily_prices["District"] == district)
+    ]
+
+    if filtered.empty:
+        return jsonify({"error": "No data available for this selection"}), 404
+
+    records = filtered.to_dict(orient="records")
+    prices = [
+        {
+            "commodity": r["Commodity"],
+            "market": r["Market"],
+            "variety": r["Variety"],
+            "grade": r["Grade"],
+            "minprice": r["Min_x0020_Price"],
+            "maxprice": r["Max_x0020_Price"],
+            "modalprice": r["Modal_x0020_Price"],
+        }
+        for r in records
+    ]
+    return jsonify({"prices": prices})
 
 @app.route("/predictFertilizer", methods=["POST"])
 def predict_fertilizer():
