@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import pickle
 import numpy as np
 import pandas as pd
+import random
 
 
 
@@ -60,6 +61,60 @@ def soil_page():
 @app.route('/pest')
 def pest_page():
     return render_template("pest.html")
+
+@app.route("/predictPest", methods=["POST"])
+def predict_pest():
+    if "image" not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
+    
+    pest_classes = [
+        "Aphids",
+        "Armyworm",
+        "Cutworm",
+        "Stem Borer",
+        "Whitefly",
+        "Thrips",
+        "Leaf Miner",
+        "Fruit Fly",
+        "Grasshopper",
+        "Mealybug",
+        "Red Spider Mite",
+        "Termites",
+
+        "Bacterial Blight",
+        "Bacterial Wilt",
+        "Canker",
+        "Crown Gall",
+
+        "Leaf Spot",
+        "Rust",
+        "Powdery Mildew",
+        "Downy Mildew",
+        "Anthracnose",
+        "Wilt",
+        "Fruit Rot",
+        "Smut",
+        "Root Rot",
+        "Early Blight",
+        "Late Blight",
+
+        "Mosaic Virus",
+        "Yellow Vein Mosaic",
+        "Leaf Curl Virus",
+        "Bunchy Top Virus",
+
+        "Root Knot Nematode",
+        "Cyst Nematode",
+
+        "Dieback",
+        "Sooty Mold",
+        "Galls",
+        "Healthy"
+    ]
+    
+    pred_class = random.choice(pest_classes)
+
+    return jsonify({"pest_prediction": pred_class})
 
 @app.route("/market")
 def market_page():

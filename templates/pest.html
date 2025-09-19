@@ -90,45 +90,85 @@
   </footer>
 
   <!-- Bootstrap + Script -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Preview selected image
-    const fileInput = document.querySelector('input[type="file"]');
-    const preview = document.getElementById('preview');
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      if (file) {
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = "block";
-      } else {
-        preview.style.display = "none";
-      }
-    });
+  <!-- Bootstrap + Script -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Preview selected image (same as you had, with safe URL revocation)
+  const fileInput = document.querySelector('input[type="file"]');
+  const preview = document.getElementById('preview');
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      preview.style.display = "block";
+      preview.onload = () => URL.revokeObjectURL(url);
+    } else {
+      preview.style.display = "none";
+    }
+  });
 
-    // Handle form submission
-    document.getElementById("pestForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
+  // Helper to show result with styling
+  function showResult(text, isError = false) {
+    const resultDiv = document.getElementById("result");
+    resultDiv.textContent = text;
+    resultDiv.classList.remove("d-none", "alert-info", "alert-danger");
+    resultDiv.classList.add(isError ? "alert-danger" : "alert-info");
+  }
 
-      // Later we’ll connect this to Flask route `/predictPest`
+  // Handle form submission robustly
+  document.getElementById("pestForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const resultDiv = document.getElementById("result");
+
+    // reset UI
+    resultDiv.className = "alert mt-4 d-none"; // clear previous classes/text
+    resultDiv.textContent = "";
+
+    const formData = new FormData(e.target);
+
+    try {
       const res = await fetch("/predictPest", {
         method: "POST",
         body: formData
       });
 
-      const resultDiv = document.getElementById("result");
+      // If server responded with non-2xx, attempt to parse JSON error message
+      if (!res.ok) {
+        let errBody = {};
+        try { errBody = await res.json(); } catch(_) { /* ignore parse error */ }
+        const errMsg = errBody.error || errBody.message || res.statusText || "Server error";
+        throw new Error(errMsg);
+      }
+
+      // parse json
       const response = await res.json();
 
-      if (response.pest) {
-        resultDiv.textContent = "Detected Pest/Disease: " + response.pest;
-        resultDiv.classList.remove("d-none", "alert-danger");
-        resultDiv.classList.add("alert-info");
+      // Accept multiple possible key names from backend
+      const pest =
+        response.pest ||
+        response.pest_prediction ||
+        response.prediction ||
+        response.name ||
+        null;
+
+      if (pest) {
+        // Optionally support category if backend returns it
+        const category = response.category ? ` (${response.category})` : "";
+        showResult("Detected Pest/Disease: " + pest + category, false);
+      } else if (response.error) {
+        showResult(response.error, true);
       } else {
-        resultDiv.textContent = response.error || "Something went wrong!";
-        resultDiv.classList.remove("d-none", "alert-info");
-        resultDiv.classList.add("alert-danger");
+        showResult("Unexpected response from server.", true);
       }
-    });
-  </script>
+
+    } catch (err) {
+      // network or parsing error
+      showResult(err.message || "Network error. Please try again.", true);
+      console.error("Pest prediction error:", err);
+    }
+  });
+</script>
+
 </body>
 </html>
