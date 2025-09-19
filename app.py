@@ -22,6 +22,10 @@ if not GROQ_API_KEY:
 
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+if not OPENWEATHER_API_KEY:
+    raise RuntimeError("OPENWEATHER_API_KEY not set. Set it in environment before use.")
+
 
 with open("crop_model.pkl", "rb") as f:
     crop_model = pickle.load(f)
@@ -286,9 +290,33 @@ def ask_anything():
 
     return jsonify({"answer": answer})
 
-@app.route('/weather')
+@app.route('/weather',methods=["GET"])
 def weatherInfo():
     return render_template('weatherInfo.html')
+
+@app.route('/api/weather',methods=["GET"])
+def weatherApi():
+    base = "https://api.openweathermap.org"
+    params = {"appid": OPENWEATHER_API_KEY}
+    
+    pincode = (request.args.get("zip") or "").strip()
+    country = (request.args.get("country") or "").strip()
+    
+    if not pincode:
+        return jsonify({"error": "Missing 'zip' parameter"}), 400
+    if not country:
+        return jsonify({"error": "Missing 'country' parameter"}), 400
+    
+    try:
+        url = f"{base}/data/2.5/weather"
+        resp = requests.get(url, params={"zip": f"{pincode},{country}", "appid": OPENWEATHER_API_KEY,"units": "metric"})
+        if resp.ok:
+            return jsonify(resp.json()),200
+        else:
+            return jsonify(resp.json()), resp.status_code
+    except Exception:
+        raise RuntimeError("weather by zip attempt failed", exc_info=True)
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

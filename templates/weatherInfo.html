@@ -9,15 +9,16 @@
     <style>
         * {
             box-sizing: border-box;
-            /* overflow: auto; */ /* ✅ fixed line 10 */
         }
 
         body {
+            position: relative;
             background: linear-gradient(135deg, #f0f9f4, #c8e6c9);
             font-family: "Poppins", sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Navbar */
@@ -60,7 +61,7 @@
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
-            min-height: 300px; /* ✅ equal card size */
+            min-height: 300px;
         }
 
         .feature-card:hover {
@@ -88,12 +89,13 @@
         }
 
         /* Footer */
+
         footer {
             text-align: center;
             padding: 15px;
             background: #2e7d32;
             color: white;
-            margin-top: 50px; /* ✅ added gap */
+            margin-top: auto;
             font-weight: 500;
         }
     </style>
@@ -101,6 +103,7 @@
 
 <body>
     <!-- Navbar -->
+
     <nav class="navbar navbar-expand-lg">
         <div class="container px-1">
             <a class="navbar-brand" href="#">🌾 Smart Kisan</a>
@@ -140,7 +143,8 @@
                         <option value="JP">Japan (JP)</option>
                     </select>
                 </div>
-                <button class="d-block mx-auto btn btn-success mt-5 col-md-6 col-12" onclick="weatherInfo()">
+                <button type="button" class="d-block mx-auto btn btn-success mt-5 col-md-6 col-12"
+                    onclick="weatherInfo()">
                     Search
                 </button>
             </div>
@@ -324,11 +328,9 @@
                 <div class="text-dark w-100">
                     <div class="card feature-card text-center">
                         <div class="feature-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                style="width: 40px; height: 30px;"
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width: 40px; height: 30px;"
                                 viewBox="0 0 640 640">
-                                <path
-                                    fill="#1b5e20"
+                                <path fill="#1b5e20"
                                     d="M342.6 41.4C330.1 28.9 309.8 28.9 297.3 41.4L201.3 137.4C188.8 149.9 188.8 170.2 201.3 182.7C213.8 195.2 234.1 195.2 246.6 182.7L288 141.3L288 498.7L246.6 457.4C234.1 444.9 213.8 444.9 201.3 457.4C188.8 469.9 188.8 490.2 201.3 502.7L297.3 598.7C303.3 604.7 311.4 608.1 319.9 608.1C328.4 608.1 336.5 604.7 342.5 598.7L438.5 502.7C451 490.2 451 469.9 438.5 457.4C426 444.9 405.7 444.9 393.2 457.4L351.8 498.8L351.8 141.3L393.2 182.7C405.7 195.2 426 195.2 438.5 182.7C451 170.2 451 149.9 438.5 137.4L342.5 41.4z" />
                             </svg>
                         </div>
@@ -353,7 +355,6 @@
 
         </div>
 
-    </div>
     </div>
 
     <!-- Footer -->
@@ -390,83 +391,86 @@
             const country = document.getElementById("country").value;
             if (!country) return alert("Please select a country.");
 
-            const API_KEY = "f12185e7dae983b43c7078259568afa7";
-            const url = `https://api.openweathermap.org/data/2.5/weather?zip=${encodeURIComponent(
-                pincode + "," + country
-            )}&units=metric&appid=${API_KEY}`;
-
+            const url = `/api/weather?zip=${encodeURIComponent(pincode)}&country=${encodeURIComponent(country)}`;
             const weather_box = document.getElementById("weather_box");
             const search_box = document.getElementById("search_box");
 
             try {
+                // UI: show loading state
                 search_box.classList.add("d-none");
                 weather_box.classList.remove("d-none");
-
                 document.getElementById("place").innerText = "Loading...";
+
                 const res = await fetch(url);
+                // parse body as JSON if possible, otherwise as text
+                let body;
+                try {
+                    body = await res.json();
+                } catch (e) {
+                    body = await res.text();
+                }
+
                 if (!res.ok) {
-                    const errText = await res.text();
-                    alert(`API error: ${res.status} ${res.statusText}\n\n${errText}`);
+                    let userMsg = "";
+                    if (body && typeof body === "object") {
+                        if (body.message) userMsg = body.message;
+                        else if (body.body && body.body.message) userMsg = body.body.message;
+                        else userMsg = JSON.stringify(body);
+                    } else {
+                        userMsg = String(body);
+                    }
+
+                    if (res.status === 404 || (userMsg && userMsg.toLowerCase().includes("city not found"))) {
+                        showError("Location not found",
+                            `OpenWeather couldn't find that postal code (${pincode}, ${country}).\n\nSuggestions:\n• Try a nearby city name (e.g. "Indore, IN") instead of pincode.\n• Double-check the country code (use 2-letter ISO, e.g. IN, US).\n• If you want, enable a server-side fallback to geocode the postal code automatically.`
+                        );
+                    } else {
+                        showError("API error", `Status ${res.status}: ${userMsg}`);
+                    }
                     resetSearch();
                     return;
                 }
-                const data = await res.json();
+
+                const data = body;
 
                 document.getElementById("lat").innerText = data.coord?.lat ?? "N/A";
                 document.getElementById("lon").innerText = data.coord?.lon ?? "N/A";
-                document.getElementById("place").innerText = `${data.name ?? "N/A"} ${data.sys?.country ? "(" + data.sys.country + ")" : ""
-                    }`;
+                document.getElementById("place").innerText = `${data.name ?? "N/A"} ${data.sys?.country ? "(" + data.sys.country + ")" : ""}`;
 
                 const weather0 = (data.weather && data.weather[0]) || {};
-                document.getElementById("weather_main").innerText =
-                    weather0.main ?? "N/A";
-                document.getElementById("weather_desc").innerText =
-                    weather0.description ?? "N/A";
+                document.getElementById("weather_main").innerText = weather0.main ?? "N/A";
+                document.getElementById("weather_desc").innerText = weather0.description ?? "N/A";
 
-                document.getElementById("temp").innerText =
-                    data.main?.temp !== undefined
-                        ? formatNumber(data.main.temp, 2)
-                        : "N/A";
-                document.getElementById("humidity").innerText =
-                    data.main?.humidity ?? "N/A";
-                document.getElementById("pressure").innerText =
-                    data.main?.pressure ?? "N/A";
+                document.getElementById("temp").innerText = data.main?.temp !== undefined ? Number(data.main.temp).toFixed(2) : "N/A";
+                document.getElementById("humidity").innerText = data.main?.humidity ?? "N/A";
+                document.getElementById("pressure").innerText = data.main?.pressure ?? "N/A";
 
                 if (data.wind?.speed !== undefined) {
                     const kmh = data.wind.speed * 3.6;
-                    document.getElementById("wind").innerText = formatNumber(kmh, 2);
+                    document.getElementById("wind").innerText = Number(kmh).toFixed(2);
                 } else {
                     document.getElementById("wind").innerText = "N/A";
                 }
 
-                document.getElementById("sea_level").innerText =
-                    data.main?.sea_level ?? "N/A";
-                document.getElementById("grnd_level").innerText =
-                    data.main?.grnd_level ?? "N/A";
-                document.getElementById("visibility").innerText =
-                    data.visibility ?? "N/A";
+                document.getElementById("sea_level").innerText = data.main?.sea_level ?? "N/A";
+                document.getElementById("grnd_level").innerText = data.main?.grnd_level ?? "N/A";
+                document.getElementById("visibility").innerText = data.visibility ?? "N/A";
 
-                const rain1h = data.rain?.["1h"] ?? 0;  // mm in last 1 hour
-                const rain3h = data.rain?.["3h"] ?? 0;  // mm in last 3 hours
-
+                const rain1h = data.rain?.["1h"] ?? 0;
+                const rain3h = data.rain?.["3h"] ?? 0;
                 document.getElementById("rain1h").innerText = `${rain1h} mm`;
                 document.getElementById("rain3h").innerText = `${rain3h} mm`;
 
                 const tz = data.timezone ?? 0;
-                document.getElementById("sunrise").innerText = epochToLocalTime(
-                    data.sys?.sunrise,
-                    tz
-                );
-                document.getElementById("sunset").innerText = epochToLocalTime(
-                    data.sys?.sunset,
-                    tz
-                );
+                document.getElementById("sunrise").innerText = epochToLocalTime(data.sys?.sunrise, tz);
+                document.getElementById("sunset").innerText = epochToLocalTime(data.sys?.sunset, tz);
+
             } catch (err) {
-                alert("Error fetching weather !!");
+                console.error(err);
+                showError("Network / Unexpected error", String(err));
                 resetSearch();
             }
         }
-
         function resetSearch() {
             document.getElementById("weather_box").classList.add("d-none");
             document.getElementById("search_box").classList.remove("d-none");
