@@ -91,10 +91,9 @@ MIT License.
 
 - **Groq API (LLaMA model)** — for powering the multilingual Q&A chatbot  
 - **WeatherMap / weather API** — for fetching live weather data  
-- **Crop Recommendation Dataset (Kaggle)** — used for training crop/soil recommendation models — [Crop Recommendation Dataset](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset) :contentReference[oaicite:0]{index=0}  
-- **Crop & Soil Dataset (Kaggle)** — used as a composite dataset relating soil parameters to crop choices — [Crop and Soil Dataset](https://www.kaggle.com/datasets/shankarpriya2913/crop-and-soil-dataset) :contentReference[oaicite:1]{index=1}  
-- **Agricultural Pests / Disease Dataset (Kaggle)** — used for pest detection / classification model training — [Crop Pest and Disease Detection](https://www.kaggle.com/datasets/nirmalsankalana/crop-pest-and-disease-detection) :contentReference[oaicite:2]{index=2}  
-- **Indian Crop Price / Market Datasets** — for fetching historical & real-time market rates (you can link the specific source you used)  
+- **Crop Recommendation Dataset (Kaggle)** — used for training crop/soil recommendation models — [Crop Recommendation Dataset](https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset) 
+- **Crop & Soil Dataset (Kaggle)** — used as a composite dataset relating soil parameters to crop choices — [Crop and Soil Dataset](https://www.kaggle.com/datasets/shankarpriya2913/crop-and-soil-dataset)  
+- **Agricultural Pests / Disease Dataset (Kaggle)** — used for pest detection / classification model training — [Crop Pest and Disease Detection](https://www.kaggle.com/datasets/nirmalsankalana/crop-pest-and-disease-detection) 
 - **Open-source libraries**: scikit-learn, pandas, numpy, Flask, Pillow, OpenCV, etc.  
 - **Community & Contributors**: Thanks to the makers of the datasets, API providers, and the open source community for tools and inspiration  
 
