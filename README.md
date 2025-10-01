@@ -41,6 +41,7 @@ Here’s how the app looks:
 ![Demo 5](demo_app/demo5.png)
 ![Demo 6](demo_app/demo6.png)
 ![Demo 7](demo_app/demo7.png)
+![Demo 8](demo_app/demo8.png)
 ---
 
 ## 💡 Innovation & Impact  
