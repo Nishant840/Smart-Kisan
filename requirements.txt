@@ -1,0 +1,25 @@
+# Core ML + Data Science
+numpy==1.23.5
+pandas==1.5.3
+scikit-learn==1.2.2
+matplotlib==3.7.1
+seaborn==0.12.2
+
+# Deep Learning & Image Processing
+tensorflow==2.12.0
+keras==2.12.0
+opencv-python==4.7.0.72
+Pillow==9.5.0
+
+# APIs and Backend
+flask==2.3.2
+fastapi==0.95.2
+uvicorn==0.22.0
+requests==2.31.0
+
+# Web Scraping (if needed for mandi prices)
+beautifulsoup4==4.12.2
+lxml==4.9.2
+
+# Utilities
+python-dotenv==1.0.0
